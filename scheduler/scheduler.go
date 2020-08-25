@@ -5,19 +5,22 @@ import (
 	"strings"
 
 	"github.com/robfig/cron/v3"
+	"github.com/victorouse/slackbot/bot"
 )
 
 type Scheduler struct {
 	cron *cron.Cron
 	jobs []Job
+	bot  *bot.Bot
 }
 
-func NewScheduler() *Scheduler {
+func NewScheduler(bot *bot.Bot) *Scheduler {
 	cron := cron.New()
 
 	return &Scheduler{
 		cron: cron,
 		jobs: []Job{},
+		bot:  bot,
 	}
 }
 
@@ -66,7 +69,7 @@ func (s *Scheduler) RemoveJob(entryID cron.EntryID) {
 
 func (s *Scheduler) AddJob(job Job) error {
 	// TODO: figure out how to pass service/bot
-	entryID, err := s.cron.AddFunc(job.schedule, func() { job.cmd(s) })
+	entryID, err := s.cron.AddFunc(job.schedule, func() { job.cmd(s.bot) })
 	if err != nil {
 		return err
 	}
@@ -84,7 +87,7 @@ func (s *Scheduler) StartJob(entryID cron.EntryID) (bool, error) {
 	for i, job := range s.jobs {
 		if job.entryID == entryID {
 			// TODO: figure out how to pass service/bot
-			id, err := s.cron.AddFunc(job.schedule, func() { job.cmd(s) })
+			id, err := s.cron.AddFunc(job.schedule, func() { job.cmd(s.bot) })
 			if err != nil {
 				return false, err
 			}

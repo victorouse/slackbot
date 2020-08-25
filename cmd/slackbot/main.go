@@ -13,5 +13,5 @@ func main() {
 		log.Fatal("Could not start server")
 	}
 
-	s.ListenAndServe()
+	s.HttpServer.ListenAndServe()
 }
