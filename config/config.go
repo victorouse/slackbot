@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"log"
@@ -14,11 +14,12 @@ type Config struct {
 
 var config Config
 
-func NewConfig() Config {
+func NewConfig() *Config {
 	err := envconfig.Process("", &config)
 	if err != nil {
 		log.Fatal(err.Error())
+		panic(1)
 	}
 
-	return config
+	return &config
 }
