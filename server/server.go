@@ -80,12 +80,6 @@ func NewServer() (*Server, error) {
 	}, nil
 }
 
-func (s *Server) ListenAndServe() {
-	config := config.NewConfig()
-	port := fmt.Sprintf(":%s", config.Port)
-	s.httpServer.ListenAndServe(port)
-}
-
 func (s *Server) HandleEvent(w http.ResponseWriter, r *http.Request) {
 	event, err := parseSlackEvent(r)
 	if err != nil {
@@ -120,22 +114,22 @@ func (s *Server) handleAppMentionEvent(ev *slackevents.AppMentionEvent) {
 	parts := strings.Split(ev.Text, " ")
 	command, args := parts[1], parts[2:]
 
-	if action, ok := s.bot.Actions[command]; ok {
+	if action, ok := s.Bot.Actions[command]; ok {
 		if command == "help" {
-			s.bot.Client.PostMessage(ev.Channel, slack.MsgOptionText(s.bot.Help(), false))
+			s.Bot.Client.PostMessage(ev.Channel, slack.MsgOptionText(s.Bot.Help(), false))
 			return
 		}
 
-		result := action.Run(args...)
-		s.bot.Client.PostMessage(ev.Channel, slack.MsgOptionText(result, false))
+		result := action.Run(s, args...)
+		s.Bot.Client.PostMessage(ev.Channel, slack.MsgOptionText(result, false))
 	} else {
-		s.bot.Client.PostMessage(ev.Channel, slack.MsgOptionText(s.bot.Help(), false))
+		s.Bot.Client.PostMessage(ev.Channel, slack.MsgOptionText(s.Bot.Help(), false))
 	}
 }
 
 func (s *Server) handleMessageEvent(ev *slackevents.MessageEvent) {
-	if len(ev.BotID) == 0 && !strings.Contains(ev.Text, s.bot.Info.ID) && ev.BotID != s.bot.Info.Profile.BotID {
+	if len(ev.BotID) == 0 && !strings.Contains(ev.Text, s.Bot.Info.ID) && ev.BotID != s.bot.Info.Profile.BotID {
 		fmt.Println("[INFO] Received message")
-		s.bot.Client.PostMessage(ev.Channel, slack.MsgOptionText("Did you say something?", false))
+		s.Bot.Client.PostMessage(ev.Channel, slack.MsgOptionText("Did you say something?", false))
 	}
 }
