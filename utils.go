@@ -30,3 +30,17 @@ func Table(headers []string, rows [][]string) string {
 
 	return t.Render()
 }
+
+func ResultSet(rows [][]interface{}) [][]string {
+	var results = make([][]string, len(rows))
+
+	for i, row := range rows {
+		values := make([]string, len(row))
+		for j, value := range row {
+			values[j] = fmt.Sprint(value)
+			results[i] = values
+		}
+	}
+
+	return results
+}

@@ -3,15 +3,18 @@ package slackbot
 type Supervisor struct {
 	Bot  *Bot
 	Cron *Cron
+	DAO  *DAO
 }
 
 func NewSupervisor(
 	bot *Bot,
 	cron *Cron,
+	dao *DAO,
 ) *Supervisor {
 	return &Supervisor{
 		Bot:  bot,
 		Cron: cron,
+		DAO:  dao,
 	}
 }
 
@@ -22,8 +25,16 @@ func (s *Supervisor) InitActions() {
 			Run:         s.echo,
 		},
 		"job": {
-			Description: "list|start|stop cron jobs",
+			Description: "list|start|stop|update cron jobs",
 			Run:         s.job,
+		},
+		"query": {
+			Description: "to be or not to be",
+			Run:         s.query,
+		},
+		"help": {
+			Description: "get help",
+			Run:         s.help,
 		},
 	}
 }
@@ -31,7 +42,7 @@ func (s *Supervisor) InitActions() {
 func (s *Supervisor) InitJobs() {
 	s.Cron.Jobs = map[string]*Job{
 		"time": {
-			Schedule:    "@every 1m",
+			Schedule:    "@every 1h",
 			Description: "tells the time at an interval",
 			Run:         s.tellTime,
 		},

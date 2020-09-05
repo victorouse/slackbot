@@ -48,6 +48,17 @@ func (s *Supervisor) job(args ...string) error {
 	return nil
 }
 
+func (s *Supervisor) query(args ...string) error {
+	headers, rows, err := s.DAO.GetShakespear()
+
+	if err != nil {
+		return err
+	}
+
+	s.Bot.SendMessage("labs", Codeblock(Table(headers, rows)))
+	return nil
+}
+
 func (s *Supervisor) listJobs() {
 	headers := []string{"name", "description", "schedule", "active"}
 	jobs := [][]string{}
@@ -90,4 +101,17 @@ func (s *Supervisor) updateJob(name string, schedule string) {
 	} else {
 		s.Bot.SendMessage("super-secret", Codeblock(fmt.Sprintf("No job: %s", name)))
 	}
+}
+
+func (s *Supervisor) help(args ...string) error {
+	headers := []string{"name", "description"}
+	rows := [][]string{}
+
+	for name, action := range s.Bot.Actions {
+		row := []string{name, action.Description}
+		rows = append(rows, row)
+	}
+
+	s.Bot.SendMessage("super-secret", Codeblock(Table(headers, rows)))
+	return nil
 }

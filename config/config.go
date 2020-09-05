@@ -7,9 +7,11 @@ import (
 )
 
 type Config struct {
-	SlackAccessToken       string `split_words:"true"`
-	SlackVerificationToken string `split_words:"true"`
-	Port                   string `default:"3000"`
+	SlackAccessToken             string `split_words:"true"`
+	SlackVerificationToken       string `split_words:"true"`
+	Port                         string `default:"3000"`
+	GoogleApplicationCredentials string `split_words:"true"`
+	ProjectID                    string `split_words:"true"`
 }
 
 func ParseConfig() *Config {

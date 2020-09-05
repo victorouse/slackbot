@@ -2,6 +2,7 @@ package slackbot
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/robfig/cron/v3"
 )
@@ -15,6 +16,7 @@ type Job struct {
 }
 
 func (s *Supervisor) tellTime() {
-	fmt.Println("tellTime")
-	s.Bot.SendMessageToChannel("super-secret", "hello")
+	t := time.Now().Format(time.UnixDate)
+	message := fmt.Sprintf(":clock1: The time is now: %s :clock1:\n", t)
+	s.Bot.SendMessageToChannel("super-secret", message)
 }
