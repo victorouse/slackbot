@@ -12,9 +12,9 @@ type Config struct {
 	Port                   string `default:"3000"`
 }
 
-var config Config
+func ParseConfig() *Config {
+	var config Config
 
-func NewConfig() *Config {
 	err := envconfig.Process("", &config)
 	if err != nil {
 		log.Fatal(err.Error())
