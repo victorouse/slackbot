@@ -15,7 +15,8 @@ func main() {
 		return
 	}
 	cron := slackbot.NewCron()
-	dao := slackbot.NewDAO()
+	store := slackbot.NewStore()
+	dao := slackbot.NewDAO(store)
 	supervisor := slackbot.NewSupervisor(bot, cron, dao)
 	responder := slackbot.NewResponder(supervisor)
 

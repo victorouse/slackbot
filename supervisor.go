@@ -32,6 +32,10 @@ func (s *Supervisor) InitActions() {
 			Description: "to be or not to be",
 			Run:         s.query,
 		},
+		"sotd": {
+			Description: "set the song of the day",
+			Run:         s.sotd,
+		},
 		"help": {
 			Description: "get help",
 			Run:         s.help,
@@ -45,6 +49,11 @@ func (s *Supervisor) InitJobs() {
 			Schedule:    "@every 1h",
 			Description: "tells the time at an interval",
 			Run:         s.tellTime,
+		},
+		"sotd": {
+			Schedule:    "* 0 9 * * *",
+			Description: "the song of the day",
+			Run:         s.sendSOTD,
 		},
 	}
 

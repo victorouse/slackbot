@@ -55,7 +55,7 @@ func (s *Supervisor) query(args ...string) error {
 		return err
 	}
 
-	s.Bot.SendMessage("labs", Codeblock(Table(headers, rows)))
+	s.Bot.SendMessage("supe-secret", Codeblock(Table(headers, rows)))
 	return nil
 }
 
@@ -101,6 +101,21 @@ func (s *Supervisor) updateJob(name string, schedule string) {
 	} else {
 		s.Bot.SendMessage("super-secret", Codeblock(fmt.Sprintf("No job: %s", name)))
 	}
+}
+
+func (s *Supervisor) sotd(args ...string) error {
+	if len(args) > 0 {
+		s.DAO.Store.sotd = args[0]
+		s.Bot.SendMessage("super-secret", "Great choice :sunglasses:")
+	} else {
+		sotd := s.DAO.Store.sotd
+		if sotd != "" {
+			s.Bot.SendMessage("super-secret", sotd)
+		} else {
+			s.Bot.SendMessage("super-secret", "missing argument")
+		}
+	}
+	return nil
 }
 
 func (s *Supervisor) help(args ...string) error {
